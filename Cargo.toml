@@ -2,7 +2,16 @@
 name = "ferrolint-django"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
 description = "Pylint-django's rules as a ferrolint plugin"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# shortcut: by path to the sibling checkout until the SDK 1.1.0 is on
+# crates.io; then `ferrolint-plugin-sdk = "=1.1.0"` and the CI can build it.
+ferrolint-plugin-sdk = { path = "../ferrolint/crates/ferrolint-plugin-sdk", version = "=1.1.0" }
 
 [lints.rust]
 unsafe_code = "forbid"
@@ -13,6 +22,7 @@ unwrap_used = "warn"
 expect_used = "warn"
 dbg_macro = "warn"
 todo = "warn"
+cognitive_complexity = "warn"
 must_use_candidate = "allow"
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"

@@ -1,13 +1,14 @@
-pub fn greeting() -> String {
-    "hello from ferrolint-django".to_string()
-}
+//! The `pylint_django` rules as a ferrolint plugin.
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+use ferrolint_plugin_sdk::prelude::*;
 
-    #[test]
-    fn greeting_names_the_app() {
-        assert_eq!(greeting(), "hello from ferrolint-django");
+#[derive(Default)]
+struct Django;
+
+impl Checker for Django {
+    fn info() -> Info {
+        Info::new("django", env!("CARGO_PKG_VERSION"))
     }
 }
+
+ferrolint_plugin_sdk::export_checker!(Django);

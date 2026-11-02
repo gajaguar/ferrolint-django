@@ -100,3 +100,6 @@ Once a pull request is open, the agent MUST:
 - Tag a minor or major bump with `make release-tag` after its pull request
   merges: it tags the base branch as `v<package.version>`, read from
   `Cargo.toml`.
+- Depend on `ferrolint-plugin-sdk` by path to the sibling `../ferrolint`
+  checkout until its 1.1.0 is on crates.io; switch to `=1.1.0` then. CI cannot
+  build the path dependency, so it fails until that switch.
