@@ -26,3 +26,7 @@ cognitive_complexity = "warn"
 must_use_candidate = "allow"
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
+
+[dev-dependencies]
+serde_json = "1"
+tempfile = "3"

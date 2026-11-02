@@ -28,7 +28,7 @@ fmt-check: ## Check formatting with rustfmt, without writing — accepts FILES="
 deny: ## Check dependencies for advisories, licenses and sources with cargo-deny
 	$(CARGO) deny --locked check
 
-cargo-test: ## Run the test suite with cargo test
+cargo-test: ## Run the test suite with cargo test (needs make ferrolint-bin)
 	$(CARGO) test --locked
 
 build: ## Build the crate into target/
@@ -38,6 +38,12 @@ plugin: ## Build the plugin as a WASM component into python/ferrolint_django/plu
 	$(CARGO) build --locked --release --target $(WASM_TARGET)
 	cp $(PLUGIN) $(PACKAGE_DIR)/plugin.wasm
 
+wheel: plugin ## Build the py3-none-any wheel that carries plugin.wasm into dist/
+	uv build --wheel
+
+ferrolint-bin: ## Build the ferrolint binary of the sibling checkout that tests/fixtures.rs runs
+	$(CARGO) build --locked --release -j 5 --manifest-path ../ferrolint/Cargo.toml -p ferrolint
+
 release-tag: ## Tag the base branch as v<package.version> and push the tag (minor and major bumps)
 	@version=$$(sed -n 's/^version = "\([^"]*\)"/\1/p' Cargo.toml | head -1); base=$(BASE:origin/%=%); tag=v$$version; \
 	test "$$version" && test "$$(git rev-parse --abbrev-ref HEAD)" = "$$base" && test -z "$$(git status --porcelain)" || { echo "release-tag: run it from a clean $$base, which must have a version in Cargo.toml"; exit 1; }; \
@@ -45,4 +51,4 @@ release-tag: ## Tag the base branch as v<package.version> and push the tag (mino
 	git rev-parse --quiet --verify "refs/tags/$$tag" >/dev/null && { echo "release-tag: $$tag already exists"; exit 1; }; \
 	git tag -a "$$tag" -m "$$tag" && git push origin "$$tag"
 
-.PHONY: install-rust clippy fmt fmt-check deny cargo-test build plugin release-tag
+.PHONY: install-rust clippy fmt fmt-check deny cargo-test build plugin wheel ferrolint-bin release-tag

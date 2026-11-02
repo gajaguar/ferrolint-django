@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ferrolint-django"
+version = "0.1.0"
+description = "Pylint-django's rules as a ferrolint plugin"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+
+# Pylint modules that `load-plugins` names; both resolve to one component.
+[project.entry-points."ferrolint.plugins"]
+pylint_django = "ferrolint_django"
+"pylint_django.checkers.migrations" = "ferrolint_django"
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/ferrolint_django"]
+# The component is built by `make plugin` and ignored by git.
+artifacts = ["python/ferrolint_django/plugin.wasm"]
