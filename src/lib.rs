@@ -147,9 +147,23 @@ fn exempt_class(tree: &Tree<'_>, class: &Node<'_>) -> bool {
     tree.arguments(class).iter().any(|base| {
         tree.base_is(base, &|qualified| {
             (admin && qualified.ends_with(".ModelAdmin"))
-                || (test_case && rules::exempt_test_case(qualified))
+                || (test_case
+                    && (rules::exempt_test_case(qualified) || from_test_module(qualified)))
         })
     })
+}
+
+/// Whether a base is imported from a test module, such as
+/// `app.tests.test_models.BaseTest` or `project_tests.testcases.Case`.
+// shortcut: a base imported from a test module counts as a `TestCase`, since
+// its ancestry is in another file; upgrade with a cross-file class lookup.
+fn from_test_module(qualified: &str) -> bool {
+    if qualified.starts_with("django.") || qualified.starts_with("rest_framework.") {
+        return false;
+    }
+    let mut parts = qualified.split('.');
+    parts.next_back();
+    parts.any(|part| part.starts_with("test") || part.ends_with("tests"))
 }
 
 ferrolint_plugin_sdk::export_checker!(Django);
