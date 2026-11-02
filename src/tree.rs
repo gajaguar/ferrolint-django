@@ -33,9 +33,6 @@ impl<'a> Tree<'a> {
             match node.kind {
                 NodeKind::ImportFrom => {
                     let module = node.detail.unwrap_or_default();
-                    if module.starts_with('.') {
-                        continue;
-                    }
                     for alias in self.children(node) {
                         let Some(name) = alias.name.filter(|name| *name != "*") else {
                             continue;

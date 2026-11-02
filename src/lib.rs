@@ -104,7 +104,9 @@ fn exempt(tree: &Tree<'_>, file: &File, finding: &RawDiagnostic) -> bool {
             .nodes
             .iter()
             .filter(|n| n.kind == NodeKind::ClassDef)
-            .any(|class| tree.name_range(class).start.offset == at && exempt_class(tree, class));
+            .any(|class| {
+                tree.name_range(class).start.offset == at && exempt_class(tree, file, class)
+            });
     }
     if !finding.message.contains(" name \"") {
         return false;
@@ -136,7 +138,7 @@ fn exempt(tree: &Tree<'_>, file: &File, finding: &RawDiagnostic) -> bool {
 /// `too-many-public-methods`.
 // shortcut: a base counts by its name, since its ancestry is in another
 // file; upgrade with a cross-file class lookup.
-fn exempt_class(tree: &Tree<'_>, class: &Node<'_>) -> bool {
+fn exempt_class(tree: &Tree<'_>, file: &File, class: &Node<'_>) -> bool {
     let name = class.name.unwrap_or_default();
     let nested = tree
         .nodes
@@ -144,26 +146,45 @@ fn exempt_class(tree: &Tree<'_>, class: &Node<'_>) -> bool {
         .any(|n| n.kind == NodeKind::ClassDef && n.id < class.id && n.last >= class.id);
     let test_case = name.ends_with("Test") || nested;
     let admin = name.ends_with("Admin") && !nested;
+    let in_tests = file.path.split('/').any(is_test_name);
     tree.arguments(class).iter().any(|base| {
         tree.base_is(base, &|qualified| {
             (admin && qualified.ends_with(".ModelAdmin"))
                 || (test_case
-                    && (rules::exempt_test_case(qualified) || from_test_module(qualified)))
+                    && (rules::exempt_test_case(qualified)
+                        || from_test_module(qualified, in_tests)))
         })
     })
 }
 
-/// Whether a base is imported from a test module, such as
-/// `app.tests.test_models.BaseTest` or `project_tests.testcases.Case`.
-// shortcut: a base imported from a test module counts as a `TestCase`, since
-// its ancestry is in another file; upgrade with a cross-file class lookup.
-fn from_test_module(qualified: &str) -> bool {
+/// Whether a base is a test class imported from a test module, such as
+/// `app.tests.test_models.BaseTest` or `.base.BaseUserTest` in a test file.
+// shortcut: a base named like a test (`Test` or `Case` in its name, but not
+// `Transaction`, `Simple` or `Live`, which `pylint_django` does not exempt) and
+// imported from a test module, or relatively from a test file, counts as a
+// `TestCase`, since its ancestry is in another file; upgrade with a
+// cross-file class lookup.
+fn from_test_module(qualified: &str, in_tests: bool) -> bool {
     if qualified.starts_with("django.") || qualified.starts_with("rest_framework.") {
         return false;
     }
-    let mut parts = qualified.split('.');
-    parts.next_back();
-    parts.any(|part| part.starts_with("test") || part.ends_with("tests"))
+    let (module, name) = qualified.rsplit_once('.').unwrap_or(("", qualified));
+    let named_like_test = name.contains("Test") || name.contains("Case");
+    // Django's own exceptions to the exemption.
+    let not_exempt = ["Transaction", "Simple", "Live"]
+        .iter()
+        .any(|word| name.contains(word));
+    if !named_like_test || not_exempt {
+        return false;
+    }
+    if module.starts_with('.') {
+        return in_tests;
+    }
+    module.split('.').any(is_test_name)
+}
+
+fn is_test_name(part: &str) -> bool {
+    part.starts_with("test") || part.ends_with("tests")
 }
 
 ferrolint_plugin_sdk::export_checker!(Django);

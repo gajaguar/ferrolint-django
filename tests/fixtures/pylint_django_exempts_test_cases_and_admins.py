@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.test import SimpleTestCase
 from django.test import TestCase
 from django.test import TransactionTestCase
-from myapp.tests.base import Base
+from myapp.tests.base import BaseTest
 from rest_framework.test import APITestCase
 
 
@@ -162,7 +162,7 @@ class Outer:
             pass
 
 
-class FromTestModuleTest(Base):
+class FromTestModuleTest(BaseTest):
     def a(self):
         pass
 
@@ -171,4 +171,3 @@ class FromTestModuleTest(Base):
 
     def c(self):
         pass
-
