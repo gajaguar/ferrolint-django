@@ -2,6 +2,9 @@
 
 ## 2026-11-03
 
+* **Change**: `SECURITY.md` and a README `## Security` section say how to
+  report a vulnerability privately, as `ferrolint` does.
+
 * **Change**: `ferrolint-plugin-sdk` is the crates.io `=1.1.0` release, no
   longer a path dependency on `../ferrolint`; the tests still run the sibling
   checkout's `ferrolint` binary.
