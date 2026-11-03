@@ -4,6 +4,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+permissions:
+  contents: read
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -14,5 +16,16 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
       - uses: jdx/mise-action@v5
       - run: pnpm install --frozen-lockfile
+      - uses: Swatinem/rust-cache@v2
+        with:
+          # Only main saves: dependabot PRs would fill the repository's cache quota.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - id: deny
+        uses: actions/cache@v6
+        with:
+          path: ~/.cargo/bin/cargo-deny
+          key: cargo-deny-${{ runner.os }}-${{ hashFiles('mk/rust.mk') }}
+      - if: steps.deny.outputs.cache-hit != 'true'
+        run: make install-rust
       - run: make check
       - run: make test
