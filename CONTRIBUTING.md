@@ -39,9 +39,7 @@ make test
 ```
 
 `make fix` applies the safe automatic fixes for what `make check` reports.
-CI runs the same targets and blocks the merge when either fails, but it cannot
-build the path dependency on `../ferrolint` until the plugin SDK 1.1.0 is on
-crates.io, so run both locally.
+CI runs the same targets and blocks the merge when either fails.
 
 ## Adding or changing a rule
 

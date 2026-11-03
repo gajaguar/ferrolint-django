@@ -30,7 +30,7 @@ keep working.
 - To build: the toolchain in `mise.toml` (Rust with the `wasm32-wasip2`
   target, `uv`), installed by `make install`, and a checkout of
   [ferrolint](https://github.com/gajaguar/ferrolint) next to this one at
-  `../ferrolint`, which provides the plugin SDK and the binary the tests run.
+  `../ferrolint`, which provides the binary the tests run.
 
 ## Usage
 
@@ -73,9 +73,6 @@ Then run `ferrolint` in the project. Leave
 
 ## Open items
 
-- The plugin SDK is a path dependency on `../ferrolint` until its 1.1.0 is on
-  crates.io, so CI cannot build the crate yet. The switch is a one-line
-  change in `Cargo.toml`.
 - Only the `pylint_django` messages the syntax decides are ported, plus the
   two migration checks.
 

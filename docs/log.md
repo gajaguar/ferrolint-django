@@ -2,6 +2,10 @@
 
 ## 2026-11-03
 
+* **Change**: `ferrolint-plugin-sdk` is the crates.io `=1.1.0` release, no
+  longer a path dependency on `../ferrolint`; the tests still run the sibling
+  checkout's `ferrolint` binary.
+
 * **Change**: `README.md` follows the template's section order with the
   plugin's own About, Key features, Requirements, Usage, a Rules table and
   Open items, and `CONTRIBUTING.md` documents the sibling `../ferrolint`

@@ -54,6 +54,8 @@ dependencies = [
 [[package]]
 name = "ferrolint-plugin-sdk"
 version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "24ad4f2fa0904913dd5160a1ca72f9ccf7db7efe5616c6bc75ba73402fb21c18"
 dependencies = [
  "wit-bindgen",
 ]

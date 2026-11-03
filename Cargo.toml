@@ -9,9 +9,7 @@ description = "Pylint-django's rules as a ferrolint plugin"
 crate-type = ["cdylib"]
 
 [dependencies]
-# shortcut: by path to the sibling checkout until the SDK 1.1.0 is on
-# crates.io; then `ferrolint-plugin-sdk = "=1.1.0"` and the CI can build it.
-ferrolint-plugin-sdk = { path = "../ferrolint/crates/ferrolint-plugin-sdk", version = "=1.1.0" }
+ferrolint-plugin-sdk = "=1.1.0"
 
 [lints.rust]
 unsafe_code = "forbid"
