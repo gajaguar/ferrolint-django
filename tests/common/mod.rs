@@ -19,7 +19,8 @@ pub fn ferrolint() -> PathBuf {
         .iter()
         .map(|profile| target.join(profile).join("ferrolint"))
         .find(|path| path.exists())
-        .expect("run `make ferrolint-bin` or set FERROLINT")
+        // Otherwise the one installed from PyPI, as CI does.
+        .unwrap_or_else(|| "ferrolint".into())
 }
 
 /// The component, built once for the whole test run.

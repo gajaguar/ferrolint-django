@@ -28,9 +28,9 @@ keep working.
 
 - A ferrolint that supports plugin contract 1.1.0, and Python 3.9 or later.
 - To build: the toolchain in `mise.toml` (Rust with the `wasm32-wasip2`
-  target, `uv`), installed by `make install`, and a checkout of
-  [ferrolint](https://github.com/gajaguar/ferrolint) next to this one at
-  `../ferrolint`, which provides the binary the tests run.
+  target, `uv`), installed by `make install`, and a
+  [ferrolint](https://github.com/gajaguar/ferrolint) binary for the tests; see
+  `CONTRIBUTING.md`.
 
 ## Usage
 

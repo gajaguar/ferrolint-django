@@ -28,7 +28,7 @@ fmt-check: ## Check formatting with rustfmt, without writing — accepts FILES="
 deny: ## Check dependencies for advisories, licenses and sources with cargo-deny
 	$(CARGO) deny --locked check
 
-cargo-test: ## Run the test suite with cargo test (needs make ferrolint-bin)
+cargo-test: ## Run the test suite with cargo test (needs a ferrolint binary, see CONTRIBUTING.md)
 	$(CARGO) test --locked
 
 build: ## Build the crate into target/

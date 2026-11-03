@@ -14,6 +14,9 @@
   cargo build (saved from `main` only) and the `cargo-deny` binary, installs
   the pinned `cargo-deny` before `make check`, and skips the rust hooks that
   `make check` already runs.
+* **Change**: the tests run the `ferrolint` binary from `FERROLINT`, else the
+  sibling checkout's build, else the one on `PATH`; CI installs
+  `ferrolint==1.1.0` from PyPI, so it no longer needs `../ferrolint`.
 
 ## 2026-11-01
 
