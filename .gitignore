@@ -10,6 +10,9 @@ mise.local.toml
 # Answers and batches of `make docs-retag`
 .cache/
 
+# A plugin is built from its lockfile (`--locked`); the global ignore must not hide it
+!Cargo.lock
+
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,jetbrains+all,visualstudiocode,node,python,rust
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,jetbrains+all,visualstudiocode,node,python,rust
 
