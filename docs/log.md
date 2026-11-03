@@ -2,6 +2,12 @@
 
 ## 2026-11-03
 
+* **Change**: version `1.0.0`, the release that declares the plugin contract
+  stable. `trusted-publishing.md` describes the `publish.yml` workflow that
+  uploads a GitHub Release to PyPI and crates.io, `README.md` gains the
+  badges and contents list of the template, and the `re2js` advisory is
+  fixed with a pnpm override.
+
 * **Change**: `SECURITY.md` and a README `## Security` section say how to
   report a vulnerability privately, as `ferrolint` does.
 
