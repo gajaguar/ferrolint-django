@@ -1,8 +1,27 @@
 # ferrolint-django
 
+[![ci](https://img.shields.io/github/actions/workflow/status/gajaguar/ferrolint-django/ci.yml?branch=main&style=flat-square&label=ci)](https://github.com/gajaguar/ferrolint-django/actions/workflows/ci.yml)
+[![rust](https://img.shields.io/github/actions/workflow/status/gajaguar/ferrolint-django/rust.yml?branch=main&style=flat-square&label=rust)](https://github.com/gajaguar/ferrolint-django/actions/workflows/rust.yml)
+[![PyPI](https://img.shields.io/pypi/v/ferrolint-django?style=flat-square)](https://pypi.org/project/ferrolint-django/)
+[![crates.io](https://img.shields.io/crates/v/ferrolint-django?style=flat-square)](https://crates.io/crates/ferrolint-django)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Topics](https://img.shields.io/badge/topics-django%20%7C%20ferrolint%20%7C%20linter%20%7C%20rust-informational?style=flat-square)](https://github.com/gajaguar/ferrolint-django)
+
 Pylint-django's rules as a [ferrolint](https://github.com/gajaguar/ferrolint)
 plugin, so a Django project keeps its `pylint_django` messages in a ferrolint
 run.
+
+## Contents
+
+- [About](#about)
+- [Key features](#key-features)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Rules](#rules)
+- [Security](#security)
+- [Contributing](#contributing)
+- [Open items](#open-items)
+- [License](#license)
 
 ## About
 
@@ -34,8 +53,13 @@ keep working.
 
 ## Usage
 
-Build the wheel and install it into the virtual environment that ferrolint
-reads:
+Install the package into the virtual environment that ferrolint reads:
+
+```bash
+uv pip install ferrolint-django
+```
+
+To try an unreleased change, build the wheel from a checkout instead:
 
 ```bash
 make wheel
@@ -71,11 +95,6 @@ Then run `ferrolint` in the project. Leave
 | `W5197` | `missing-backwards-migration-callable`     | A `RunPython` migration without a backwards callable.              |
 | `W5198` | `new-db-field-with-default`                | An `AddField` migration with a default, in an app's latest one.    |
 
-## Open items
-
-- Only the `pylint_django` messages the syntax decides are ported, plus the
-  two migration checks.
-
 ## Security
 
 Report a vulnerability by emailing <dev@gajaguar.com> rather than opening a
@@ -84,6 +103,11 @@ public issue. [SECURITY.md](SECURITY.md) has the supported versions.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Open items
+
+- Only the `pylint_django` messages the syntax decides are ported, plus the
+  two migration checks.
 
 ## License
 
