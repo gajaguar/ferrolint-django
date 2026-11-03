@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions:
+  contents: read
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -18,3 +20,6 @@ jobs:
       - run: make spell
       - run: make commits-check
       - run: pre-commit run --all-files
+        env:
+          # The rust workflow's `make check` already runs both.
+          SKIP: rust-fmt,clippy
