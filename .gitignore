@@ -491,3 +491,4 @@ debug/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,jetbrains+all,visualstudiocode,node,python,rust
+python/ferrolint_django/plugin.wasm

@@ -21,6 +21,12 @@ Install the toolchain and dependencies as described in the
 make install
 ```
 
+The tests run the `ferrolint` binary of the sibling `../ferrolint` checkout
+against the fixtures in `tests/fixtures/`. Build it once with
+`make ferrolint-bin` before `make test`. `make plugin` builds the WASM
+component into `python/ferrolint_django/plugin.wasm`, and `make wheel` packs
+it into `dist/`.
+
 Run `make help` for the full list of targets.
 
 ## Before opening a pull request
@@ -34,6 +40,14 @@ make test
 
 `make fix` applies the safe automatic fixes for what `make check` reports.
 CI runs the same targets and blocks the merge when either fails.
+
+## Adding or changing a rule
+
+A rule keeps the message ID and symbol of the `pylint_django` message it
+ports. List it in `RULES` in `src/rules.rs`, implement it there or in
+`src/migrations.rs`, and add it to the table in the [README](README.md#rules).
+Cover it
+with a fixture: a `.py` file and its `.expected` findings in `tests/fixtures/`.
 
 ## Commits and branches
 

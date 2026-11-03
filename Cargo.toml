@@ -2,7 +2,14 @@
 name = "ferrolint-django"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
 description = "Pylint-django's rules as a ferrolint plugin"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ferrolint-plugin-sdk = "=1.1.0"
 
 [lints.rust]
 unsafe_code = "forbid"
@@ -13,6 +20,11 @@ unwrap_used = "warn"
 expect_used = "warn"
 dbg_macro = "warn"
 todo = "warn"
+cognitive_complexity = "warn"
 must_use_candidate = "allow"
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
+
+[dev-dependencies]
+serde_json = "1"
+tempfile = "3"
