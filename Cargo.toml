@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2024"
 license = "MIT"
 description = "Pylint-django's rules as a ferrolint plugin"
+repository = "https://github.com/gajaguar/ferrolint-django"
+readme = "README.md"
+keywords = ["ferrolint", "django", "pylint", "linter", "wasm"]
+categories = ["development-tools"]
+include = ["/src", "/LICENSE", "/README.md"]
 
 [lib]
 crate-type = ["cdylib"]
