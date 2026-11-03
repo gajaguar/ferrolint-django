@@ -76,6 +76,11 @@ Then run `ferrolint` in the project. Leave
 - Only the `pylint_django` messages the syntax decides are ported, plus the
   two migration checks.
 
+## Security
+
+Report a vulnerability by emailing <dev@gajaguar.com> rather than opening a
+public issue. [SECURITY.md](SECURITY.md) has the supported versions.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
