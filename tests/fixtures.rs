@@ -1,8 +1,7 @@
-//! Runs the built plugin, through the ferrolint binary of the sibling
-//! checkout, over the fixtures and compares with their `.expected` files:
+//! Runs the built plugin, through the ferrolint binary, over the fixtures and compares with their `.expected` files:
 //! one `line:code:message` per finding of a `pylint_django` rule.
-// shortcut: the binary is the sibling checkout's until ferrolint 1.1.0 is on
-// PyPI; `FERROLINT` names another one.
+// The binary is `FERROLINT`, else the sibling checkout's build, else the
+// `ferrolint` on PATH (`uv tool install ferrolint==1.1.0`).
 
 // A helper that panics is how a test fails, as `clippy.toml` allows inside
 // `#[test]` functions themselves.

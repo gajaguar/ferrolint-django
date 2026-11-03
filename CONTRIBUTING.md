@@ -21,9 +21,10 @@ Install the toolchain and dependencies as described in the
 make install
 ```
 
-The tests run the `ferrolint` binary of the sibling `../ferrolint` checkout
-against the fixtures in `tests/fixtures/`. Build it once with
-`make ferrolint-bin` before `make test`. `make plugin` builds the WASM
+The tests run a `ferrolint` binary against the fixtures in `tests/fixtures/`:
+`FERROLINT` if set, else the build of a sibling `../ferrolint` checkout
+(`make ferrolint-bin`), else the `ferrolint` on `PATH`
+(`uv tool install ferrolint==1.1.0`, as CI does). `make plugin` builds the WASM
 component into `python/ferrolint_django/plugin.wasm`, and `make wheel` packs
 it into `dist/`.
 

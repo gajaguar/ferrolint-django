@@ -27,5 +27,6 @@ jobs:
           key: cargo-deny-${{ runner.os }}-${{ hashFiles('mk/rust.mk') }}
       - if: steps.deny.outputs.cache-hit != 'true'
         run: make install-rust
+      - run: uv tool install ferrolint==1.1.0
       - run: make check
       - run: make test
