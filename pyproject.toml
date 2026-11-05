@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ferrolint-django"
-version = "1.0.0"
+version = "1.0.1"
 description = "Pylint-django's rules as a ferrolint plugin"
 readme = "README.md"
 license = "MIT"

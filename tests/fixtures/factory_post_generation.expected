@@ -1,0 +1,2 @@
+35:E0213:Method 'control' should have "self" as first argument
+8:R0904:Too many public methods (7/2)

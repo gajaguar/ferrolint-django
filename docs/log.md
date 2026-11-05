@@ -1,5 +1,10 @@
 # Directory Update Log
 
+## 2026-11-04
+
+* **Change**: version `1.0.1`. A method decorated with `factory_boy`'s
+  `post_generation` is out of `no-self-argument`, as `pylint_django` leaves it.
+
 ## 2026-11-03
 
 * **Change**: version `1.0.0`, the release that declares the plugin contract

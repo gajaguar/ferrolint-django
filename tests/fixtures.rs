@@ -40,7 +40,8 @@ fn findings(dir: &Path, fixture: &str) -> Vec<String> {
             let ours =
                 code.len() == 5 && code.starts_with(['E', 'W', 'R']) && code[1..].starts_with('5')
                     || code == "R0904"
-                    || code == "C0103";
+                    || code == "C0103"
+                    || code == "E0213";
             ours.then(|| {
                 format!(
                     "{}:{code}:{}",

@@ -108,6 +108,23 @@ fn exempt(tree: &Tree<'_>, file: &File, finding: &RawDiagnostic) -> bool {
                 tree.name_range(class).start.offset == at && exempt_class(tree, file, class)
             });
     }
+    if finding.message.starts_with("Method '")
+        && finding
+            .message
+            .contains("should have \"self\" as first argument")
+    {
+        let method = finding.message.split('\'').nth(1);
+        return tree
+            .nodes
+            .iter()
+            .rfind(|n| {
+                n.kind == NodeKind::FunctionDef
+                    && n.name == method
+                    && n.range.start.offset <= at
+                    && at <= n.range.end.offset
+            })
+            .is_some_and(|function| post_generation(tree, function));
+    }
     if !finding.message.contains(" name \"") {
         return false;
     }
@@ -132,6 +149,16 @@ fn exempt(tree: &Tree<'_>, file: &File, finding: &RawDiagnostic) -> bool {
         }
         _ => false,
     }
+}
+
+/// Whether `factory_boy`'s `post_generation` decorates the function: its first
+/// argument is the factory instance's `obj`, so `pylint_django` skips it.
+fn post_generation(tree: &Tree<'_>, function: &Node<'_>) -> bool {
+    tree.children(function)
+        .into_iter()
+        .filter(|d| d.kind == NodeKind::Decorator)
+        .filter_map(|d| tree.children(d).first().and_then(|e| tree.qualified(e)))
+        .any(|q| q == "factory.post_generation" || q == "factory.helpers.post_generation")
 }
 
 /// A `TestCase` (or a class nested in one) and a `ModelAdmin` are out of
