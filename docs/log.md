@@ -1,5 +1,11 @@
 # Directory Update Log
 
+## 2026-11-05
+
+* **Change**: version `1.1.0`. A model or `ModelForm` whose Django base is in
+  another file is found through the host class queries, which need ferrolint
+  1.2.0.
+
 ## 2026-11-04
 
 * **Change**: version `1.0.1`. A method decorated with `factory_boy`'s
