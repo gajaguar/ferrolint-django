@@ -1,6 +1,6 @@
 [package]
 name = "ferrolint-django"
-version = "1.0.1"
+version = "1.1.0"
 edition = "2024"
 license = "MIT"
 description = "Pylint-django's rules as a ferrolint plugin"
@@ -14,7 +14,7 @@ include = ["/src", "/LICENSE", "/README.md"]
 crate-type = ["cdylib"]
 
 [dependencies]
-ferrolint-plugin-sdk = "=1.1.0"
+ferrolint-plugin-sdk = "=1.2.0"
 
 [lints.rust]
 unsafe_code = "forbid"

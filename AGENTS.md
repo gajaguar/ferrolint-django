@@ -100,4 +100,4 @@ Once a pull request is open, the agent MUST:
 - Tag a minor or major bump with `make release-tag` after its pull request
   merges: it tags the base branch as `v<package.version>`, read from
   `Cargo.toml`.
-- Depend on `ferrolint-plugin-sdk` from crates.io, pinned to `=1.1.0`.
+- Depend on `ferrolint-plugin-sdk` from crates.io, pinned to `=1.2.0`.

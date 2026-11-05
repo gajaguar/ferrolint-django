@@ -2,7 +2,7 @@
 
 use ferrolint_plugin_sdk::prelude::*;
 
-use crate::tree::{Tree, last};
+use crate::tree::{Mro, Tree, last};
 
 pub const NOT_CALLABLE: &str = "E5101";
 pub const AUTH_USER: &str = "E5141";
@@ -88,14 +88,14 @@ pub const RULES: [(&str, &str, &str); 13] = [
 ];
 
 /// Every finding of the rules of this file, in `tree`.
-pub fn check(tree: &Tree<'_>) -> Vec<Diagnostic> {
+pub fn check(tree: &Tree<'_>, mro: &Mro<'_>) -> Vec<Diagnostic> {
     let docstrings = docstrings(tree);
     let mut out = Vec::new();
     for node in tree.nodes {
         match node.kind {
             NodeKind::ClassDef => {
-                model(tree, node, &mut out);
-                model_form(tree, node, &mut out);
+                model(tree, node, mro, &mut out);
+                model_form(tree, node, mro, &mut out);
             }
             NodeKind::ImportFrom => imported_user(tree, node, &mut out),
             NodeKind::Call => call(tree, node, &mut out),
@@ -272,8 +272,8 @@ fn meta_of<'a>(tree: &Tree<'a>, class: &Node<'a>) -> Option<&'a Node<'a>> {
 }
 
 /// `E5101`, `W5102` and `W5103` for a model.
-fn model(tree: &Tree<'_>, class: &Node<'_>, out: &mut Vec<Diagnostic>) {
-    if !tree.derives(class, &["Model"]) {
+fn model(tree: &Tree<'_>, class: &Node<'_>, mro: &Mro<'_>, out: &mut Vec<Diagnostic>) {
+    if !tree.derives(class, &["Model"], mro) {
         return;
     }
     let name = class.name.unwrap_or_default();
@@ -346,8 +346,8 @@ fn inherits_unicode(tree: &Tree<'_>, class: &Node<'_>, at: Range, out: &mut Vec<
 }
 
 /// `W5104`: a `ModelForm` whose `Meta` assigns `exclude`.
-fn model_form(tree: &Tree<'_>, class: &Node<'_>, out: &mut Vec<Diagnostic>) {
-    if !tree.derives(class, &["ModelForm"]) {
+fn model_form(tree: &Tree<'_>, class: &Node<'_>, mro: &Mro<'_>, out: &mut Vec<Diagnostic>) {
+    if !tree.derives(class, &["ModelForm"], mro) {
         return;
     }
     if let Some(meta) = meta_of(tree, class)

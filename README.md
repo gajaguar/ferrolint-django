@@ -45,7 +45,7 @@ keep working.
 
 ## Requirements
 
-- A ferrolint that supports plugin contract 1.1.0, and Python 3.9 or later.
+- A ferrolint that supports plugin contract 1.2.0, and Python 3.9 or later.
 - To build: the toolchain in `mise.toml` (Rust with the `wasm32-wasip2`
   target, `uv`), installed by `make install`, and a
   [ferrolint](https://github.com/gajaguar/ferrolint) binary for the tests; see

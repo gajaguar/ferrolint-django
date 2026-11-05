@@ -23,8 +23,8 @@ fn write(root: &Path, name: &str, text: &str) {
     fs::write(path, text).unwrap();
 }
 
-/// The `W5198` findings of a run over `.`, as `path:line:column`, sorted.
-fn found(root: &Path) -> Vec<String> {
+/// The `code` findings of a run over `.`, as `path:line:column`, sorted.
+fn found(root: &Path, code: &str) -> Vec<String> {
     let output = Command::new(common::ferrolint())
         .args([".", "--no-cache", "--format", "json"])
         .current_dir(root)
@@ -37,7 +37,7 @@ fn found(root: &Path) -> Vec<String> {
         .as_array()
         .unwrap()
         .iter()
-        .filter(|d| d["code"] == "W5198")
+        .filter(|d| d["code"] == code)
         .map(|d| {
             format!(
                 "{}:{}:{}",
@@ -77,7 +77,7 @@ fn new_field_defaults_are_read_in_the_latest_migration_only() {
         }
     }
     assert_eq!(
-        found(root),
+        found(root, "W5198"),
         [
             "app1/migrations/0002_b.py:6:9",
             "app1/migrations/0002_b.py:9:9",
@@ -93,5 +93,40 @@ fn new_field_defaults_are_read_in_the_latest_migration_only() {
         ".pylintrc",
         "[MESSAGES CONTROL]\ndisable=all\nenable=W5198\n",
     );
-    assert_eq!(found(root), Vec::<String>::new());
+    assert_eq!(found(root, "W5198"), Vec::<String>::new());
+}
+
+#[test]
+fn a_model_is_known_by_the_host_through_a_base_in_another_file() {
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path();
+    common::venv(root, &common::plugin());
+    fs::create_dir(root.join(".home")).unwrap();
+    write(
+        root,
+        ".pylintrc",
+        "[MASTER]\nload-plugins=pylint_django\n[MESSAGES CONTROL]\ndisable=all\nenable=W5102\n",
+    );
+    // The host reads the MRO from source, so Django has to be in the project.
+    for init in ["django", "django/db"] {
+        write(root, &format!("{init}/__init__.py"), "");
+    }
+    write(
+        root,
+        "django/db/models/__init__.py",
+        "class Model:\n    pass\n",
+    );
+    write(root, "app/__init__.py", "");
+    write(
+        root,
+        "app/base.py",
+        "from django.db import models\n\n\nclass Base(models.Model):\n    class Meta:\n        abstract = True\n",
+    );
+    write(
+        root,
+        "app/models.py",
+        "from app.base import Base\n\n\nclass Pet(Base):\n    def __unicode__(self):\n        return \"pet\"\n",
+    );
+    // `Base` has no Django name: only the host's MRO says it is a model.
+    assert_eq!(found(root, "W5102"), ["app/models.py:4:7"]);
 }
