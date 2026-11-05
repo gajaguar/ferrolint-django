@@ -6,6 +6,9 @@ use std::collections::HashMap;
 
 use ferrolint_plugin_sdk::prelude::*;
 
+/// The host's MRO of a base expression, class first, or none.
+pub type Mro<'a> = dyn Fn(&Node<'_>) -> Option<Vec<String>> + 'a;
+
 pub struct Tree<'a> {
     pub nodes: &'a [Node<'a>],
     pub source: &'a str,
@@ -170,21 +173,27 @@ impl<'a> Tree<'a> {
             })
     }
 
-    /// Whether the class derives from a base whose last name is one of
-    /// `names`, through the classes of this file. shortcut: a base is a
-    /// Django class by its name, since the real ancestry is in other files;
-    /// upgrade with an `ancestors` query of the host.
-    pub fn derives(&self, class: &Node<'_>, names: &[&str]) -> bool {
-        self.derives_at(class, names, 0)
+    /// Whether the class derives from a Django class whose last name is one of
+    /// `names`. `mro` is the host's MRO of a base expression, when it has one;
+    /// it decides for that base. shortcut: with no answer a base is a Django
+    /// class by its name, since the real ancestry is in other files; the
+    /// fallback stays for a host that cannot tell.
+    pub fn derives(&self, class: &Node<'_>, names: &[&str], mro: &Mro<'_>) -> bool {
+        self.derives_at(class, names, mro, 0)
     }
 
-    fn derives_at(&self, class: &Node<'_>, names: &[&str], depth: u8) -> bool {
+    fn derives_at(&self, class: &Node<'_>, names: &[&str], mro: &Mro<'_>, depth: u8) -> bool {
         depth < 16
             && self.arguments(class).iter().any(|base| {
+                if let Some(chain) = mro(base) {
+                    return chain
+                        .iter()
+                        .any(|q| q.starts_with("django.") && names.contains(&last(q)));
+                }
                 names.contains(&last(self.text(base)))
                     || self
                         .class_of(base)
-                        .is_some_and(|c| self.derives_at(c, names, depth + 1))
+                        .is_some_and(|c| self.derives_at(c, names, mro, depth + 1))
             })
     }
 

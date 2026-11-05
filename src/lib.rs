@@ -33,6 +33,14 @@ fn severity(code: &str) -> Severity {
     }
 }
 
+/// The host's MRO of the class a base expression names.
+fn host_mro(cx: &Context<'_>, base: &Node<'_>) -> Option<Vec<String>> {
+    match cx.class_of(base)? {
+        ClassRef::Class(q) => cx.class_ancestors(&q),
+        ClassRef::Instance(_) => None,
+    }
+}
+
 impl Checker for Django {
     fn info() -> Info {
         let mut info = Info::new("django", env!("CARGO_PKG_VERSION"))
@@ -53,7 +61,7 @@ impl Checker for Django {
         let tree = Tree::new(cx.nodes(), cx.source());
         let mut found = Vec::new();
         if plugin_loaded(cx.option("load-plugins")) {
-            found.extend(rules::check(&tree));
+            found.extend(rules::check(&tree, &|base| host_mro(cx, base)));
         }
         let options: Vec<(String, String)> = cx
             .option("load-plugins")
