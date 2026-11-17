@@ -2,7 +2,7 @@
 	"name": "ferrolint-django-tools",
 	"private": true,
 	"devDependencies": {
-		"cspell": "^10.4.0",
+		"cspell": "^10.5.0",
 		"markdownlint-cli2": "^0.24.0"
 	}
 }
